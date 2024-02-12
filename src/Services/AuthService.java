@@ -1,9 +1,6 @@
 package Services;
 import Abstracts.User;
 import Abstracts.User.UserRole;
-import Entities.Admin;
-import Entities.Artist;
-import Entities.Listener;
 
 public class AuthService {
   private static User user;
@@ -35,13 +32,7 @@ public class AuthService {
   }
 
   public static User login(User user) {
-    if (user instanceof Admin) {
-      setRole(UserRole.Admin);
-    } else if (user instanceof Artist) {
-      setRole(UserRole.Artist);
-    } else if (user instanceof Listener) {
-      setRole(UserRole.Listener);
-    }
+    setRole(user.getRole());
     setLoggedIn(true);
     setUser(user);
     return user;
@@ -49,6 +40,7 @@ public class AuthService {
 
   public static void logout() {
     setLoggedIn(false);
+    setRole(null);
     setUser(null);
   }
 }

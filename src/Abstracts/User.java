@@ -7,14 +7,24 @@ public abstract class User extends CommonProperties {
     Listener,
   }
 
+  private String fullname;
   private String username;
   private String password;
   private boolean isActive;
   
-  public User(String username, String password) {
+  public User(String fullname, String username, String password) {
     super();
+    this.fullname = fullname;
     this.username = username;
     this.password = password;
+  }
+
+  public String getFullname() {
+    return fullname;
+  }
+  
+  public void setFullname(String fullname) {
+    this.fullname = fullname;
   }
 
   public String getUsername() {

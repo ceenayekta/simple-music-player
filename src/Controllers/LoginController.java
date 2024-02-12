@@ -10,8 +10,8 @@ public class LoginController {
     if (AuthService.isLoggedIn()) {
       callback.run();
     } else {
-      String username = InputReaderService.getString("Enter username: ");
-      String password = InputReaderService.getString("Enter password: ");
+      String username = InputReaderService.getString("Enter username: ", null);
+      String password = InputReaderService.getString("Enter password: ", null);
       try {
         User user = UserManager.validateCredentials(username, password);
         AuthService.login(user);

@@ -1,10 +1,18 @@
 package Entities;
-import Abstracts.User;
+import Abstracts.DetailedUser;
 
-public class Artist extends User {
+public class Artist extends DetailedUser {
+  private String nickname;
 
-  public Artist(String username, String password) {
-    super(username, password);
+  public Artist(String fullname, String username, String password, String nickname) {
+    super(fullname, username, password);
+  }
+
+  public String getNickname() {
+    return nickname;
+  }
+  public void setNickname(String nickname) {
+    this.nickname = nickname;
   }
 
   @Override

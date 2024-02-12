@@ -1,10 +1,10 @@
 package Entities;
-import Abstracts.User;
+import Abstracts.DetailedUser;
 
-public class Listener extends User {
+public class Listener extends DetailedUser {
 
-  public Listener(String username, String password) {
-    super(username, password);
+  public Listener(String fullname, String username, String password) {
+    super(fullname, username, password);
   }
 
   @Override
