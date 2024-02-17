@@ -71,6 +71,7 @@ public class UI {
     String isArtist = InputReaderService.getString("Are you Artist or Listener? (a/l) ", Arrays.asList("a", "l"));
     String fullName = InputReaderService.getString("Enter your full name: ", null);
     String username = InputReaderService.getString("Enter your username: ", null);
+    String bio = InputReaderService.getString("Tell us a short bio about " + fullName + ": ", null);
     while (UserManager.getUserByUsername(username) != null) {
       System.out.println("This username is already taken.");
       username = InputReaderService.getString("Please choose another one: ", null);
@@ -78,9 +79,9 @@ public class UI {
     String password = InputReaderService.getString("Enter your password: ", null);
     if (isArtist.equals("a")) {
       String nickname = InputReaderService.getString("Enter your nickname: ", null);
-      user = UserManager.createUser(nickname, fullName, username, password);
+      user = UserManager.createUser(fullName, username, password, bio, nickname);
     } else {
-      user = UserManager.createUser(fullName, username, password);
+      user = UserManager.createUser(fullName, username, password, bio);
     }
     AuthService.login(user);
   }
