@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import Abstracts.DetailedUser;
+import Enums.UserRole;
 
 public class Listener extends DetailedUser {
   private Song lastPlayedSong;

@@ -3,10 +3,9 @@ import java.util.List;
 
 import Abstracts.User;
 import Controllers.LoginController;
-import Managers.UserManager;
 import Services.AuthService;
-import Services.InputReaderService;
-import Services.Utils;
+import Services.OutputService;
+import Services.CommonService;
 
 public class UI {
   private static boolean stop = false;
@@ -30,7 +29,7 @@ public class UI {
       () -> logout(),
       () -> exit()
     );
-    Utils.menuHandler(options, actions);
+    CommonService.menuHandler(options, actions);
   }
 
   private static void showInitMenu() {
@@ -44,7 +43,7 @@ public class UI {
       () -> createAccount(),
       () -> exit()
     );
-    Utils.menuHandler(options, actions);
+    CommonService.menuHandler(options, actions);
   }
 
   public static void login() {
@@ -67,23 +66,9 @@ public class UI {
   }
 
   public static void createAccount() {
-    User user = null;
-    String isArtist = InputReaderService.getString("Are you Artist or Listener? (a/l) ", Arrays.asList("a", "l"));
-    String fullName = InputReaderService.getString("Enter your full name: ", null);
-    String username = InputReaderService.getString("Enter your username: ", null);
-    String bio = InputReaderService.getString("Tell us a short bio about " + fullName + ": ", null);
-    while (UserManager.getUserByUsername(username) != null) {
-      System.out.println("This username is already taken.");
-      username = InputReaderService.getString("Please choose another one: ", null);
-    }
-    String password = InputReaderService.getString("Enter your password: ", null);
-    if (isArtist.equals("a")) {
-      String nickname = InputReaderService.getString("Enter your nickname: ", null);
-      user = UserManager.createUser(fullName, username, password, bio, nickname);
-    } else {
-      user = UserManager.createUser(fullName, username, password, bio);
-    }
-    AuthService.login(user);
+    User newUser = OutputService.signupWizard();
+    boolean succeed = AuthService.login(newUser);
+    System.out.println(succeed ? "Glad to have you in our family, " + newUser.getFullname() + "!" : "Failed to create account. Please try again later :(");
   }
 
   public static void exit() {

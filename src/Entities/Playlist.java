@@ -3,9 +3,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import Abstracts.CommonProperties;
 import Abstracts.DetailedUser;
 
-public class Playlist {
+public class Playlist extends CommonProperties {
   private String name;
   private String description;
   private DetailedUser owner;

@@ -1,12 +1,8 @@
 package Abstracts;
 
-public abstract class User extends CommonProperties {
-  public enum UserRole {
-    Admin,
-    Artist,
-    Listener,
-  }
+import Enums.UserRole;
 
+public abstract class User extends CommonProperties {
   private String fullname;
   private String username;
   private String password;

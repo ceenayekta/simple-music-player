@@ -5,22 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Abstracts.CommonProperties;
-import Abstracts.User;
+import Enums.Category;
 
 public class Song extends CommonProperties {
   private String name;
   private Playlist album;
   private Artist artist;
   private File file;
-  private List<User> playedBy;
+  private Category category;
+  private List<Listener> playedBy;
 
-  public Song(String name, Playlist album, Artist artist, File file) {
+  public Song(String name, Playlist album, Artist artist, File file, Category category) {
     super();
     this.name = name;
     this.album = album;
     this.artist = artist;
     this.file = file;
+    this.category = category;
     this.playedBy = new ArrayList<>();
+    if (artist != null) artist.addSong(this);
+    if (album != null) album.addSong(this);
   }
 
   public String getName() {
@@ -64,10 +68,17 @@ public class Song extends CommonProperties {
     return this.file.getPath();
   }
 
-  public List<User> getPlayedBy() {
+  public Category getCategory() {
+    return category;
+  }
+  public void setCategory(Category category) {
+    this.category = category;
+  }
+
+  public List<Listener> getPlayedBy() {
     return playedBy;
   }
-  public void setPlayedBy(List<User> playedBy) {
+  public void setPlayedBy(List<Listener> playedBy) {
     this.playedBy = playedBy;
   }
   public int getPlayCount() {

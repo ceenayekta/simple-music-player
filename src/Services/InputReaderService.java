@@ -49,21 +49,21 @@ public class InputReaderService {
 
   public static LocalDate getDate(String message) {
     String input = getString(message, null);
-    while (!Utils.dateIsValid(input)) {
+    while (!CommonService.dateIsValid(input)) {
       System.out.println("Invalid date. Please insert with the format DD-MM-YYYY");
       input = getString(message, null);
     }
-    LocalDate date = Utils.formatDate(input);
+    LocalDate date = CommonService.formatDate(input);
     return date;
   }
 
   public static LocalTime getTime(String message) {
     String input = getString(message, null);
-    while (!Utils.timeIsValid(input)) {
+    while (!CommonService.timeIsValid(input)) {
       System.out.println("Invalid date. Please insert with the format HH:mm");
       input = getString(message, null);
     }
-    LocalTime time = Utils.formatTime(input);
+    LocalTime time = CommonService.formatTime(input);
     return time;
   }
 

@@ -1,6 +1,8 @@
 package Managers;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import Abstracts.User;
 import Entities.Admin;
 import Entities.Artist;
@@ -8,6 +10,10 @@ import Entities.Listener;
 
 public class UserManager {
   private static List<User> users = new ArrayList<>();
+
+  public static List<User> getAllUsers() {
+    return users;
+  }
 
   public static void addUser(User user) {
     users.add(user);
@@ -35,21 +41,13 @@ public class UserManager {
   }
 
   public static User getUserById(int userId) {
-    for (User user : users) {
-      if (user.getId() == userId) {
-        return user;
-      }
-    }
-    return null;
+    Optional<User> user = users.stream().filter(u -> u.getId() == userId).findFirst();
+    return user.orElse(null);
   }
 
   public static User getUserByUsername(String username) {
-    for (User user : users) {
-      if (user.getUsername().equals(username)) {
-        return user;
-      }
-    }
-    return null;
+    Optional<User> user = users.stream().filter(u -> u.getUsername().equals(username)).findFirst();
+    return user.orElse(null);
   }
 
   public static User validateCredentials(String username, String password) throws Exception {
@@ -75,10 +73,6 @@ public class UserManager {
         throw new Exception("Username is taken by another user!");
       }
     }
-  }
-
-  public static List<User> getAllUsers() {
-    return users;
   }
 
   public static void generateData() {
