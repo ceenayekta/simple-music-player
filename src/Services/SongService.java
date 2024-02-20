@@ -1,7 +1,6 @@
 package Services;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import Entities.Playlist;
@@ -22,7 +21,12 @@ public class SongService {
 
   public static List<Song> filterSongsByCategory(List<Song> songs, Category category) {
     Stream<Song> filteredSongs = songs.stream().filter(s -> s.getCategory().equals(category));
-    return filteredSongs.collect(Collectors.toList());
+    return filteredSongs.toList();
+  }
+
+  public static List<Song> filterSongsByIds(List<Song> songs, List<String> ids) {
+    Stream<Song> filteredSongs = songs.stream().filter(s -> ids.stream().anyMatch(id -> s.getId() == Integer.parseInt(id)));
+    return filteredSongs.toList();
   }
   
   public static List<Song> getAllSimilarSongsByCategory(Song song) {
@@ -37,6 +41,6 @@ public class SongService {
 
   public static List<Playlist> getSimilarPlaylistsByCategory(Song song) {
     Stream<Playlist> filteredPlaylists = PlaylistManager.getAllPlaylists().stream().filter(p -> areHalfOfSongsSameCategory(p.getSongs(), song.getCategory()));
-    return filteredPlaylists.collect(Collectors.toList());
+    return filteredPlaylists.toList();
   }
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
 
 import Abstracts.CommonProperties;
 
@@ -77,16 +77,16 @@ public class CommonService {
     actions.get(Integer.parseInt(choice) - 1).run();
   }
 
-  public static <T> List<Object> map(List<T> array, Function<? super T, ? extends Object> mapper) {
-    return array.stream().map(mapper).collect(Collectors.toList());
+  public static <T> List<Object> map(List<T> array, Function<? super T, Object> mapper) {
+    return array.stream().map(mapper).toList();
   }
 
-  public static <T> List<List<Object>> map2D(List<T> array, Function<? super T, ? extends List<Object>> mapper) {
-    return array.stream().map(mapper).collect(Collectors.toList());
+  public static <T> List<List<Object>> map2D(List<T> array, Function<? super T, List<Object>> mapper) {
+    return array.stream().map(mapper).toList();
   }
 
   public static <T> List<T> filter(List<T> array, Predicate<? super T> predicate) {
-    return array.stream().filter(predicate).collect(Collectors.toList());
+    return array.stream().filter(predicate).toList();
   }
 
   public static List<Object> createArrayOf(int size) {
@@ -98,7 +98,7 @@ public class CommonService {
   }
 
   public static List<Integer> getAllIdsOfEntity(List<CommonProperties> list) {
-    List<Integer> ids = list.stream().map((item) -> item.getId()).collect(Collectors.toList());
+    List<Integer> ids = list.stream().map((item) -> item.getId()).toList();
     return ids;
   }
 

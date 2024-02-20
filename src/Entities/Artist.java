@@ -38,6 +38,10 @@ public class Artist extends DetailedUser {
     allSongs.remove(targetSong);
   }
 
+  public List<Song> getSingleTrackSongs() {
+    return this.allSongs.stream().filter(s -> s.getAlbum() == null).toList();
+  }
+
   public Song getMostPlayedSong() {
     // Assuming that Song class has a method to get the play count
     Song mostPlayedSong = null;

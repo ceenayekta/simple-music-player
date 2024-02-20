@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Abstracts.CommonProperties;
-import Abstracts.DetailedUser;
+import Abstracts.User;
 
 public class Playlist extends CommonProperties {
   private String name;
   private String description;
-  private DetailedUser owner;
+  private User owner;
   private boolean isPublic;
   private LocalDateTime publishedAt;
   private List<Song> songs;
 
-  public Playlist(String name, String description, DetailedUser owner, List<Song> songs) {
+  public Playlist(String name, String description, User owner, List<Song> songs) {
     this.name = name;
     this.description = description;
     this.owner = owner;
@@ -41,10 +41,10 @@ public class Playlist extends CommonProperties {
     this.description = description;
   }
 
-  public DetailedUser getOwner() {
+  public User getOwner() {
     return owner;
   }
-  public void setOwner(DetailedUser owner) {
+  public void setOwner(User owner) {
     this.owner = owner;
   }
 
