@@ -1,5 +1,6 @@
 package Services;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,10 +9,11 @@ import Abstracts.User;
 import Entities.Artist;
 import Entities.Playlist;
 import Entities.Song;
+import Enums.Category;
+import Managers.PlaylistManager;
 import Managers.UserManager;
 
 public class OutputService {
-
   // --------------- prints ------------------
 
   public static void printTable(List<String> labels, List<List<Object>> data) {
@@ -44,6 +46,17 @@ public class OutputService {
     // printTable(labels, data);
   }
 
+  public static void printPlaylists(List<Playlist> songs) {
+    // List<String> labels = Arrays.asList("ID", "Fullname", "Birthday", "Username");
+    // List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(s.getId(), s.getName(), s.));
+    // printTable(labels, data);
+  }
+
+  public static String printCategories() {
+    CommonService.printOptions(Arrays.stream(Category.values()).map(c -> c.toString()).toList());
+    return InputReaderService.getString("Give your song a category: ", CommonService.createArrayOf(Arrays.asList(Category.values()).size()));
+  }
+
   // --------------- wizards ----------------
   
   public static User signupWizard() {
@@ -66,7 +79,7 @@ public class OutputService {
     return user;
   }
   
-  public static Playlist playlistWizard() {
+  public static Playlist playlistCreationWizard() {
     User owner = AuthService.getUser();
     List<Song> songs = new ArrayList<>();
     String name = InputReaderService.getString("Enter a name for you playlist: ", null);
@@ -76,7 +89,7 @@ public class OutputService {
       if (choice.equals("y")) {
         List<Song> singleTracks = ((Artist)owner).getSingleTrackSongs();
         printSongs(singleTracks);
-        String inputIds = InputReaderService.getString("Enter each ID of tracks you want to add (separated by comma ex. 1, 2, 3): ", null);
+        String inputIds = InputReaderService.getString("Enter each ID of tracks would you want to add? (separated by comma ex. 1, 2, 3): ", null);
         List<String> ids = Arrays.stream(inputIds.split(",")).map(id -> id.trim()).toList();
         List<Song> filteredTracks = SongService.filterSongsByIds(singleTracks, ids);
         songs.addAll(filteredTracks);
@@ -84,5 +97,37 @@ public class OutputService {
     }
     Playlist playlist = new Playlist(name, description, owner, songs);
     return playlist;
+  }
+  
+  public static Song songCreationWizard() {
+    User artist = AuthService.getUser();
+    if (artist instanceof Artist) {
+      File file = null;
+      String name = InputReaderService.getString("Enter a name for you song: ", null);
+      Category category = getCategory();
+      Playlist album = getAlbum(((Artist)artist).getPlaylists());
+      try {
+        file = FileService.importSongFile(name);
+      } catch (Exception e) {
+        System.out.println("Failed to import song file. " + e.getMessage());
+        return null;
+      }
+      Song song = new Song(name, album, (Artist)artist, file, category);
+      return song;
+    } else {
+      System.out.println("Only artists can create songs.");
+    }
+    return null;
+  }
+
+  public static Category getCategory() {
+    String category = printCategories();
+    return Category.valueOf(category);
+  }
+
+  public static Playlist getAlbum(List<Playlist> albums) {
+    printPlaylists(albums);
+    String id = InputReaderService.getString("Which album would you like to add this song to? (Enter ID): ", CommonService.getAllIdsOfEntity(albums));
+    return PlaylistManager.getPlaylistById(Integer.parseInt(id));
   }
 }

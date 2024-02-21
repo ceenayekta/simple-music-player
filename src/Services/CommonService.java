@@ -97,8 +97,8 @@ public class CommonService {
     return options;
   }
 
-  public static List<Integer> getAllIdsOfEntity(List<CommonProperties> list) {
-    List<Integer> ids = list.stream().map((item) -> item.getId()).toList();
+  public static List<Object> getAllIdsOfEntity(List<? extends CommonProperties> list) {
+    List<Object> ids = list.stream().map((item) -> (Object)item.getId()).toList();
     return ids;
   }
 
