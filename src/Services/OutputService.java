@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import Abstracts.DetailedUser;
 import Abstracts.User;
 import Entities.Artist;
 import Entities.Playlist;
@@ -52,6 +53,12 @@ public class OutputService {
     // printTable(labels, data);
   }
 
+  public static void printUsers(List<User> songs) {
+    // List<String> labels = Arrays.asList("ID", "Fullname", "Birthday", "Username");
+    // List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(s.getId(), s.getName(), s.));
+    // printTable(labels, data);
+  }
+
   public static String printCategories() {
     CommonService.printOptions(Arrays.stream(Category.values()).map(c -> c.toString()).toList());
     return InputReaderService.getString("Give your song a category: ", CommonService.createArrayOf(Arrays.asList(Category.values()).size()));
@@ -59,8 +66,8 @@ public class OutputService {
 
   // --------------- wizards ----------------
   
-  public static User signupWizard() {
-    User user = null;
+  public static DetailedUser signupWizard() {
+    DetailedUser user = null;
     String isArtist = InputReaderService.getString("Are you Artist or Listener? (a/l) ", Arrays.asList("a", "l"));
     String fullName = InputReaderService.getString("Enter your full name: ", null);
     String username = InputReaderService.getString("Enter your username: ", null);

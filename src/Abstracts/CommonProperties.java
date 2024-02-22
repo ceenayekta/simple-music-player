@@ -5,11 +5,14 @@ public abstract class CommonProperties {
   private int id;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
+  private static int idCounter = 0;
 
   public CommonProperties() {
     super();
+    this.id = idCounter;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = null;
+    idCounter++;
   }
   
   public int getId() {

@@ -37,8 +37,13 @@ public class SongManager {
   }
 
   public static Song getSongById(int songId) {
-    Optional<Song> song = songs.stream().filter(u -> u.getId() == songId).findFirst();
+    Optional<Song> song = songs.stream().filter(s -> s.getId() == songId).findFirst();
     return song.orElse(null);
+  }
+
+  public static List<Song> filterSongsByName(String query) {
+    List<Song> song = songs.stream().filter(s -> s.getName().toLowerCase().contains(query.toLowerCase())).toList();
+    return song;
   }
 
   public static void generateData() {

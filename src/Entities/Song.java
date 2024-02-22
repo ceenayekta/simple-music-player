@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+
 import Abstracts.CommonProperties;
 import Enums.Category;
 
@@ -60,9 +64,16 @@ public class Song extends CommonProperties {
   public float getSize() {
     return this.file.length();
   }
-  public int getLength() {
-    // return AudioFileIO.read(this.file).getAudioHeader().getTrackLength();
-    return 0;
+  public double getLength() {
+    try {
+      AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.file);
+      AudioFormat format = audioInputStream.getFormat();
+      long frames = audioInputStream.getFrameLength();
+      double durationInSeconds = (frames+0.0) / format.getFrameRate();
+      return durationInSeconds;
+    } catch (Exception e) {
+      return 0;
+  }
   }
   public String getPath() {
     return this.file.getPath();

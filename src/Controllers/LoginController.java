@@ -17,7 +17,6 @@ public class LoginController {
         AuthService.login(user);
       } catch (Exception e) {
         System.out.println(e.getMessage());
-        System.out.println("Try again...");
       }
       run(callback);
     }

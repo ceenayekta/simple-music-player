@@ -7,6 +7,8 @@ import Entities.Playlist;
 
 public abstract class DetailedUser extends User {
   private String bio;
+  private boolean isBanned = false;
+  private int playTimeInSeconds = 0;
   private List<Playlist> playlists;
   private List<DetailedUser> followers;
   private List<DetailedUser> followings;
@@ -26,6 +28,20 @@ public abstract class DetailedUser extends User {
   }
   public String getBio() {
     return bio;
+  }
+
+  public boolean isBanned() {
+    return isBanned;
+  }
+  public void setBanned(boolean isBanned) {
+    this.isBanned = isBanned;
+  }
+
+  public Integer getPlayTimeInSeconds() {
+    return playTimeInSeconds;
+  }
+  public void setPlayTimeInSeconds(int playTimeInSeconds) {
+    this.playTimeInSeconds = playTimeInSeconds;
   }
 
   public List<Playlist> getPlaylists() {

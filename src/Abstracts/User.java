@@ -6,7 +6,6 @@ public abstract class User extends CommonProperties {
   private String fullname;
   private String username;
   private String password;
-  private boolean isActive;
   
   public User(String fullname, String username, String password) {
     super();
@@ -37,14 +36,6 @@ public abstract class User extends CommonProperties {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public boolean isActive() {
-    return isActive;
-  }
-
-  public void setActive(boolean isActive) {
-    this.isActive = isActive;
   }
 
   public abstract UserRole getRole();
