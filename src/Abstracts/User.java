@@ -1,20 +1,25 @@
 package Abstracts;
 
-public abstract class User extends CommonProperties {
-  public enum UserRole {
-    Admin,
-    Artist,
-    Listener,
-  }
+import Enums.UserRole;
 
+public abstract class User extends CommonProperties {
+  private String fullname;
   private String username;
   private String password;
-  private boolean isActive;
   
-  public User(String username, String password) {
+  public User(String fullname, String username, String password) {
     super();
+    this.fullname = fullname;
     this.username = username;
     this.password = password;
+  }
+
+  public String getFullname() {
+    return fullname;
+  }
+  
+  public void setFullname(String fullname) {
+    this.fullname = fullname;
   }
 
   public String getUsername() {
@@ -31,14 +36,6 @@ public abstract class User extends CommonProperties {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public boolean isActive() {
-    return isActive;
-  }
-
-  public void setActive(boolean isActive) {
-    this.isActive = isActive;
   }
 
   public abstract UserRole getRole();
