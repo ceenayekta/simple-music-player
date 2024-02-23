@@ -28,25 +28,25 @@ public class UI {
 
     switch (AuthService.getRole()) {
       case Admin:
-        options = AdminUI.getOptions();
-        actions = AdminUI.getActions();
+        options.addAll(AdminUI.getOptions());
+        actions.addAll(AdminUI.getActions());
         break;
       case Artist:
-        options = ArtistUI.getOptions();
-        actions = ArtistUI.getActions();
+        options.addAll(ArtistUI.getOptions());
+        actions.addAll(ArtistUI.getActions());
         break;
       case Listener:
-        options = ListenerUI.getOptions();
-        actions = ListenerUI.getActions();
+        options.addAll(ListenerUI.getOptions());
+        actions.addAll(ListenerUI.getActions());
         break;
       default:
         break;
     }
 
-    // options.add("" + options.size() + ". Logout");
-    // options.add("" + options.size() + ". Exit");
-    // actions.add(() -> logout());
-    // actions.add(() -> exit());
+    options.add("" + (options.size() + 1) + ". Logout");
+    options.add("" + (options.size() + 1) + ". Exit");
+    actions.add(() -> logout());
+    actions.add(() -> exit());
     CommonService.menuHandler(options, actions);
   }
 

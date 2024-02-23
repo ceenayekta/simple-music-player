@@ -79,7 +79,8 @@ public class CommonService {
 
   public static void menuHandler(List<String> options, List<Runnable> actions) {
     CommonService.printOptions(options);
-    String choice = InputReaderService.getString("What do you mind to do?", CommonService.createArrayOf(options.size()));
+    String choice = InputReaderService.getString("What do you mind to do? ", CommonService.createArrayOf(options.size()));
+    System.out.println();
     actions.get(Integer.parseInt(choice) - 1).run();
   }
 

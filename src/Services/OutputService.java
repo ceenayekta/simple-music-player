@@ -20,22 +20,23 @@ public class OutputService {
 
   public static void printTable(List<String> labels, List<List<Object>> data) {
     for (String label : labels) {
-        System.out.printf("%-15s", label);
+      System.out.printf("%-15s", label);
     }
     System.out.println();
     for (int i = 0; i < labels.size(); i++) {
       System.out.printf("%-15s", "---------------");
     }
     System.out.println();
-    for (int i = 0; i < labels.size(); i++) {
-      List<Object> row = data.get(i);
-      for (Object cell : row) {
-          System.out.printf("%-15s", cell);
+    for (List<Object> row : data) {
+      for (int i = 0; i < labels.size(); i++) {
+        Object cell = row.get(i);
+        System.out.printf("%-15s", cell);
       }
       System.out.println();
     }
     if (data.size() == 0) {
       System.out.printf("%-" + labels.size()*15 + "s", "No Data to Show!");
+      System.out.println();
     }
     for (int i = 0; i < labels.size(); i++) {
       System.out.printf("%-15s", "---------------");
@@ -44,13 +45,13 @@ public class OutputService {
   }
 
   public static void printSongs(List<Song> songs, boolean showIsBanned) {
-    List<String> labels = Arrays.asList("ID", "Name", "Duration", "Played Count", "Category", "Album", "Artist", "Published At");
+    List<String> labels = new ArrayList<>(Arrays.asList("ID", "Name", "Duration", "Played", "Category", "Album", "Artist", "Published At"));
     List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(
       s.getId(),
       s.getName(),
       s.getDuration(),
       s.getPlayCount(),
-      s.getCategory(),
+      s.getCategory().toString(),
       s.getAlbum() == null ? "(Single Track)" : s.getAlbum().getName(),
       s.getArtist().getNickname(),
       s.getPublishedAt() == null ? "(Not Published)" : CommonService.shortDateFormat(s.getPublishedAt()),
@@ -61,7 +62,7 @@ public class OutputService {
   }
 
   public static void printPlaylists(List<Playlist> playlists, boolean showIsBanned) {
-    List<String> labels = Arrays.asList("ID", "Name", "Overall Played Count", "Songs", "Duration", "Creator", "Published At");
+    List<String> labels = new ArrayList<>(Arrays.asList("ID", "Name", "Played", "Songs", "Duration", "Creator", "Published At"));
     List<List<Object>> data = CommonService.map2D(playlists, (p) -> Arrays.asList(
       p.getId(),
       p.getName(),
@@ -77,7 +78,7 @@ public class OutputService {
   }
 
   public static void printUsers(List<User> users, boolean showIsBanned) {
-    List<String> labels = Arrays.asList("ID", "Username", "Fullname", "Role", "Joined At", "Is Banned");
+    List<String> labels = new ArrayList<>(Arrays.asList("ID", "Username", "Fullname", "Role", "Joined At"));
     List<List<Object>> data = CommonService.map2D(users, (u) -> Arrays.asList(
       u.getId(),
       u.getUsername(),
@@ -91,9 +92,10 @@ public class OutputService {
   }
 
   public static void printDetailedUsers(List<DetailedUser> detailedUser) {
-    List<String> labels = Arrays.asList("ID", "Nickname", "Playlists", "Songs", "Followers", "Following", "Joined At");
+    List<String> labels = Arrays.asList("ID", "Role", "Name", "Playlists", "Songs", "Followers", "Following", "Joined At");
     List<List<Object>> data = CommonService.map2D(detailedUser, (d) -> Arrays.asList(
       d.getId(),
+      d.getRole().toString(),
       d instanceof Artist ? ((Artist) d).getNickname() : d.getFullname(),
       d.getPlaylistsCount(),
       d.getSongsCount(),
@@ -104,28 +106,36 @@ public class OutputService {
     printTable(labels, data);
   }
 
-  public static String printCategories() {
+  public static String getCategoryString(String message) {
     CommonService.printOptions(Arrays.stream(Category.values()).map(c -> c.toString()).toList());
-    return InputReaderService.getString("Give your song a category: ", CommonService.createArrayOf(Arrays.asList(Category.values()).size()));
+    return InputReaderService.getString(message, Arrays.stream(Category.values()).map(c -> (Object) c.toString()).toList());
   }
 
   // ---------------
 
   public static void printDetails(List<String> titles, List<Object> values) {
-    System.out.printf("%-35s", "---------------------");
-    for (int i = 0; i < titles.size(); i++) {
-      System.out.printf("%-15s", titles.get(i));
-      System.out.printf("%-1s", "|");
-      System.out.printf("%-25s", values.get(i));
+    System.out.printf("%-35s", "----------------------------------------------------------------------");
+    System.out.println();
+    if (values.size() == titles.size()) {
+      for (int i = 0; i < titles.size(); i++) {
+        System.out.printf("%-15s", titles.get(i));
+        System.out.printf("%-1s", "|");
+        System.out.printf("%-25s", values.get(i));
+        System.out.println();
+      }
+    } else {
+      System.out.printf("%-15s", "No Data to Show!");
       System.out.println();
     }
-    System.out.printf("%-35s", "---------------------");
+    System.out.printf("%-35s", "----------------------------------------------------------------------");
+    System.out.println();
   }
 
   public static void printProfile(DetailedUser d) {
-    List<String> labels = Arrays.asList(d instanceof Artist ? "Nickname" : "Fullname", "Bio", "Playlists", "Songs", "Followers", "Following", "Joined At");
+    List<String> labels = Arrays.asList(d instanceof Artist ? "Nickname" : "Fullname", "Role", "Bio", "Playlists", "Songs", "Followers", "Following", "Joined At");
     List<Object> values = Arrays.asList(
       d instanceof Artist ? ((Artist)d).getNickname() : d.getFullname(),
+      d.getRole().toString(),
       d.getBio(),
       d.getPlaylistsCount(),
       d.getSongsCount(),
@@ -138,7 +148,7 @@ public class OutputService {
 
   public static void printSong(Song s) {
     List<String> labels = Arrays.asList("Name", "Duration", "Played Count", "Category", "Album", "Artist", "Published At");
-    List<Object> values = Arrays.asList(
+    List<Object> values = s == null ? new ArrayList<>() : Arrays.asList(
       s.getName(),
       s.getDuration(),
       s.getPlayCount(),
@@ -152,7 +162,7 @@ public class OutputService {
 
   public static void printPlaylist(Playlist p) {
     List<String> labels = Arrays.asList("ID", "Name", "Overall Played Count", "Songs", "Duration", "Creator", "Published At");
-    List<Object> values = Arrays.asList(
+    List<Object> values = p == null ? new ArrayList<>() : Arrays.asList(
       p.getId(),
       p.getName(),
       p.getOverallPlayedCount(),
@@ -187,7 +197,7 @@ public class OutputService {
   }
   
   public static Playlist playlistCreationWizard() {
-    User owner = AuthService.getUser();
+    DetailedUser owner = (DetailedUser) AuthService.getUser();
     List<Song> songs = new ArrayList<>();
     String name = InputReaderService.getString("Enter a name for you playlist: ", null);
     String description = InputReaderService.getString("(Optional) Add a description for " + name + ": ", null);
@@ -212,8 +222,9 @@ public class OutputService {
     if (artist instanceof Artist) {
       File file = null;
       String name = InputReaderService.getString("Enter a name for you song: ", null);
-      Category category = getCategory();
+      Category category = getCategory("Give your song a category: ");
       Playlist album = getAlbum(((Artist)artist).getPlaylists());
+      System.out.println("Please follow the pop-up and select your song file :D");
       try {
         file = FileService.importSongFile(name);
       } catch (Exception e) {
@@ -229,14 +240,14 @@ public class OutputService {
     return null;
   }
 
-  public static Category getCategory() {
-    String category = printCategories();
+  public static Category getCategory(String message) {
+    String category = getCategoryString(message);
     return Category.valueOf(category);
   }
 
   public static Playlist getAlbum(List<Playlist> albums) {
     printPlaylists(albums, true);
-    List<Object> possibleOptions = CommonService.getAllIdsOfEntity(albums);
+    List<Object> possibleOptions = new ArrayList<>(CommonService.getAllIdsOfEntity(albums));
     possibleOptions.add("s");
     String id = InputReaderService.getString("Which album would you like to add this song to? (Enter ID, or 's' to skip): ", possibleOptions);
     return id.equals("s") ? null : PlaylistManager.getPlaylistById(Integer.parseInt(id));

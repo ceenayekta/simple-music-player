@@ -1,5 +1,6 @@
 package Pages;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,12 +44,12 @@ public class ArtistUI {
 
   public static void showEditActions() {
     stopInnerMenu = false;
-    List<String> options = EditDetailedUserUI.getOptions();
-    List<Runnable> actions = EditDetailedUserUI.getActions();
+    List<String> options = new ArrayList<>(EditDetailActionsUI.getOptions());
+    List<Runnable> actions = new ArrayList<>(EditDetailActionsUI.getActions());
     options.add("" + (options.size() + 1) + ". Edit Nickname");
     options.add("" + (options.size() + 1) + ". <- Go Back");
     actions.add(() -> artist.setNickname(InputReaderService.getString("Enter your new nickname: ", null)));
-    actions.add(() -> stopInnerMenu = false);
+    actions.add(() -> stopInnerMenu = true);
     while (!stopInnerMenu) {
       CommonService.menuHandler(options, actions);
     }
@@ -70,65 +71,13 @@ public class ArtistUI {
 
   public static void showPlaylistActions() {
     stopInnerMenu = false;
-    List<String> options = Arrays.asList(
-      "1. Show Top PlayLists",
-      "2. Show All PlayLists",
-      "3. Change a Playlist Name",
-      "4. Change a Playlist Description",
-      "5. Add a PlayList",
-      "6. Private a PlayList",
-      "7. Public a PlayList",
-      "8. Delete a PlayList",
-      "9. <- Go Back"
-    );
-    List<Runnable> actions = Arrays.asList(
-      () -> OutputService.printPlaylists(PlaylistManager.getActivePlaylistsOfUser(artist.getId()), true),
-      () -> OutputService.printPlaylists(artist.getPlaylists(), true),
-      () -> changePlaylistName(getPlaylistId("Enter playlist id you want to set new name to: ")),
-      () -> changePlaylistDescription(getPlaylistId("Enter playlist id you want to set new description to: ")),
-      () -> OutputService.playlistCreationWizard(),
-      () -> changePlaylistPublicOrPrivate(false),
-      () -> changePlaylistPublicOrPrivate(true),
-      () -> deletePlaylist(getPlaylistId("Enter playlist id you want to remove: ")),
-      () -> { stopInnerMenu = true; }
-    );
+    List<String> options = new ArrayList<>(PlaylistActionsUI.getOptions());
+    List<Runnable> actions = new ArrayList<>(PlaylistActionsUI.getActions());
+    options.add("" + (options.size() + 1) + ". <- Go Back");
+    actions.add(() -> stopInnerMenu = true);
     while (!stopInnerMenu) {
       CommonService.menuHandler(options, actions);
     }
-  }
-
-  public static void changePlaylistName(int playlistId) {
-    Playlist playlist = PlaylistManager.getPlaylistById(playlistId);
-    String name = InputReaderService.getString("Type your new name for playlist: ", null);
-    playlist.setName(name);
-  }
-
-  public static void changePlaylistDescription(int playlistId) {
-    Playlist playlist = PlaylistManager.getPlaylistById(playlistId);
-    String description = InputReaderService.getString("Type your new description for playlist: ", null);
-    playlist.setDescription(description);
-  }
-
-  public static void deletePlaylist(int playlist) {
-    Playlist foundPlaylist = PlaylistManager.getPlaylistById(playlist);
-    if (foundPlaylist == null) {
-      System.out.println("Playlist not found.");
-    } else {
-      OutputService.printPlaylist(foundPlaylist);
-      String confirm = InputReaderService.getString("Are you sure you want to delete this playlist? (y/n): ", Arrays.asList("y", "n"));
-      if (confirm.equals("y")) {
-        String confirmSongsDeletion = InputReaderService.getString("Do you wanna delete songs from this playlist? (y/n): ", Arrays.asList("y", "n"));
-        PlaylistManager.removePlaylist(foundPlaylist, confirmSongsDeletion.equals("y"));
-      } else {
-        System.out.println("Deleting cancelled!");
-      }
-    }
-  }
-
-  public static void changePlaylistPublicOrPrivate(boolean isPublic) {
-    List<Object> possibleIds = CommonService.getAllIdsOfEntity(artist.getPlaylists());
-    InputReaderService.getString("Enter playlist id you mind to make " + (isPublic ? "public" : "private") + ": ", possibleIds);
-    PlaylistManager.getPlaylistById(0);
   }
 
   // ------------ Song Actions ------------------

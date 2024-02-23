@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 import Abstracts.CommonProperties;
-import Abstracts.User;
+import Abstracts.DetailedUser;
 
 public class Playlist extends CommonProperties {
   private String name;
   private String description;
-  private User owner;
+  private DetailedUser owner;
   private boolean isPublic;
   private boolean isBanned = false;
   private LocalDateTime publishedAt;
   private List<Song> songs;
 
-  public Playlist(String name, String description, User owner, List<Song> songs) {
+  public Playlist(String name, String description, DetailedUser owner, List<Song> songs) {
     this.name = name;
     this.description = description;
     this.owner = owner;
@@ -27,6 +27,7 @@ public class Playlist extends CommonProperties {
     } else {
       this.songs = new ArrayList<>();
     }
+    owner.addPlaylist(this);
   }
 
   public String getName() {
@@ -43,10 +44,10 @@ public class Playlist extends CommonProperties {
     this.description = description;
   }
 
-  public User getOwner() {
+  public DetailedUser getOwner() {
     return owner;
   }
-  public void setOwner(User owner) {
+  public void setOwner(DetailedUser owner) {
     this.owner = owner;
   }
 

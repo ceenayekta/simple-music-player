@@ -1,5 +1,6 @@
 package Pages;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -90,7 +91,7 @@ public class AdminUI {
   }
 
   public static void sortUsersByRole() {
-    List<User> filteredUsers = UserManager.getUserByRole(UserRole.Artist);
+    List<User> filteredUsers = new ArrayList<>(UserManager.getUserByRole(UserRole.Artist));
     filteredUsers.addAll(UserManager.getUserByRole(UserRole.Listener));
     OutputService.printUsers(filteredUsers, true);
   }
