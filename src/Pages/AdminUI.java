@@ -168,7 +168,7 @@ public class AdminUI {
       () -> OutputService.printSongs(SongManager.getAllSongs(), true),
       () -> OutputService.printSongs(SongManager.sortSongsByPlayCount(false), true),
       () -> OutputService.printPlaylists(PlaylistManager.getAllPlaylists(), true),
-      () -> OutputService.printPlaylists(PlaylistManager.sortPlayListsByPlayCount(false), true),
+      () -> OutputService.printPlaylists(PlaylistManager.sortPlayListsByPlayCount(false, null), true),
       () -> banSong(getSongId("Enter song ID you mind to ban: "), true),
       () -> banPlayList(getPlaylistId("Enter playlist ID you mind to ban: "), false),
       () -> banSong(getSongId("Enter song ID you mind to ban: "), true),

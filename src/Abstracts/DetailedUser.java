@@ -43,6 +43,9 @@ public abstract class DetailedUser extends User {
   public void setPlayTimeInSeconds(int playTimeInSeconds) {
     this.playTimeInSeconds = playTimeInSeconds;
   }
+  public void increasePlayTime(int seconds) {
+    playTimeInSeconds += seconds;
+  }
 
   public List<Playlist> getPlaylists() {
     return playlists;
@@ -56,7 +59,7 @@ public abstract class DetailedUser extends User {
   public int getSongsCount() {
     int count = 0;
     for (Playlist playlist : playlists) {
-      count += playlist.setSongsCount();
+      count += playlist.getSongsCount();
     }
     return count;
   }

@@ -2,6 +2,7 @@ package Entities;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import Abstracts.CommonProperties;
 import Abstracts.User;
@@ -88,11 +89,14 @@ public class Playlist extends CommonProperties {
   public void setSongs(List<Song> songs) {
     this.songs = songs;
   }
-  public int setSongsCount() {
+  public int getSongsCount() {
     return songs.size();
   }
   public void addSong(Song song) {
     this.songs.add(song);
+  }
+  public void removeSong(Song song) {
+    this.songs.remove(song);
   }
 
   public float getTotalDuration() {
@@ -109,6 +113,14 @@ public class Playlist extends CommonProperties {
       count += song.getPlayCount();
     }
     return count;
+  }
+
+  public void changeSongPriority(Song song, int priority) {
+    Optional<Song> samePrioritySong = song.getAlbum().getSongs().stream().filter(s -> s.getPriorityInAlbum() == priority).findFirst();
+    if (samePrioritySong.isPresent()) {
+      samePrioritySong.get().setPriorityInAlbum(song.getPriorityInAlbum());
+    }
+    song.setPriorityInAlbum(priority);
   }
   
 }

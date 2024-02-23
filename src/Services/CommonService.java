@@ -104,7 +104,7 @@ public class CommonService {
   }
 
   public static List<Object> getAllIdsOfEntity(List<? extends CommonProperties> list) {
-    List<Object> ids = list.stream().map((item) -> (Object)item.getId()).toList();
+    List<Object> ids = list.stream().map((item) -> (Object) Integer.valueOf(item.getId())).toList();
     return ids;
   }
 

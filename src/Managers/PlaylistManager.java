@@ -21,7 +21,14 @@ public class PlaylistManager {
     playlists.add(playlist);
   }
 
-  public static void removePlaylist(Playlist playlist) {
+  public static void removePlaylist(Playlist playlist, boolean removeSongs) {
+    playlist.getSongs().forEach(s -> {
+      if (removeSongs) {
+        SongManager.removeSong(s);
+      } else {
+        s.setAlbum(null);
+      }
+    });
     playlists.remove(playlist);
   }
 
@@ -31,9 +38,9 @@ public class PlaylistManager {
     return newPlaylist;
   }
 
-  public static void removePlaylistById(int playlistId) {
+  public static void removePlaylistById(int playlistId, boolean removeSongs) {
     Playlist playlist = getPlaylistById(playlistId);
-    removePlaylist(playlist);
+    removePlaylist(playlist, removeSongs);
   }
 
   public static Playlist getPlaylistById(int playlistId) {
@@ -69,8 +76,8 @@ public class PlaylistManager {
     return filteredPlaylists;
   }
 
-  public static List<Playlist> sortPlayListsByPlayCount(boolean onlyActive) {
-    List<Playlist> playlistsToSearch = onlyActive ? getActivePlaylists() : playlists;
+  public static List<Playlist> sortPlayListsByPlayCount(boolean onlyActive, Integer ownerId) {
+    List<Playlist> playlistsToSearch = onlyActive ? (ownerId == null ? getActivePlaylists() : getActivePlaylistsOfUser(ownerId)) : playlists;
     List<Playlist> playlists = playlistsToSearch.stream().sorted((u1, u2) -> {
       return u1.getOverallPlayedCount().compareTo(u2.getOverallPlayedCount());
     }).toList();

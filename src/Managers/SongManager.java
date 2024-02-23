@@ -22,6 +22,10 @@ public class SongManager {
   }
 
   public static void removeSong(Song song) {
+    if (song.getAlbum() != null) {
+      song.getAlbum().removeSong(song);
+    }
+    song.getArtist().removeSong(song);
     songs.remove(song);
   }
 
