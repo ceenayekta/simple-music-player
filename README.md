@@ -1,4 +1,5 @@
 # Simple Music Player
+> Current Version has slight bugs.
 
 ## Description
 
