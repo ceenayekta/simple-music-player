@@ -12,12 +12,14 @@ import Abstracts.CommonProperties;
 import Enums.Category;
 
 public class Song extends CommonProperties {
+  private boolean isBanned = false;
   private String name;
   private Playlist album;
   private Artist artist;
   private File file;
   private Category category;
   private List<Listener> playedBy;
+  private int priorityInAlbum = 0;
 
   public Song(String name, Playlist album, Artist artist, File file, Category category) {
     super();
@@ -28,30 +30,44 @@ public class Song extends CommonProperties {
     this.category = category;
     this.playedBy = new ArrayList<>();
     if (artist != null) artist.addSong(this);
-    if (album != null) album.addSong(this);
+    if (album != null) {
+      album.addSong(this);
+      this.priorityInAlbum = album.getSongsCount();
+    }
   }
 
   public String getName() {
     return name;
   }
 
-  protected void setName(String name) {
+  public void setName(String name) {
     this.name = name;
+  }
+
+  public boolean isBanned() {
+    return isBanned;
+  }
+  public void setBanned(boolean isBanned) {
+    this.isBanned = isBanned;
   }
 
   public Playlist getAlbum() {
     return album;
   }
 
-  protected void setAlbum(Playlist album) {
+  public void setAlbum(Playlist album) {
+    if (this.album != null) {
+      this.album.removeSong(this);
+    }
     this.album = album;
+    priorityInAlbum = album.getSongsCount() + 1;
   }
 
   public Artist getArtist() {
     return artist;
   }
 
-  protected void setArtist(Artist artist) {
+  public void setArtist(Artist artist) {
     this.artist = artist;
   }
 
@@ -64,13 +80,14 @@ public class Song extends CommonProperties {
   public float getSize() {
     return this.file.length();
   }
-  public double getLength() {
+  
+  public int getDuration() {
     try {
       AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.file);
       AudioFormat format = audioInputStream.getFormat();
       long frames = audioInputStream.getFrameLength();
       double durationInSeconds = (frames+0.0) / format.getFrameRate();
-      return durationInSeconds;
+      return ((int)durationInSeconds);
     } catch (Exception e) {
       return 0;
   }
@@ -92,11 +109,21 @@ public class Song extends CommonProperties {
   public void setPlayedBy(List<Listener> playedBy) {
     this.playedBy = playedBy;
   }
-  public int getPlayCount() {
+  public void addPlayedBy(Listener listener) {
+    playedBy.add(listener);
+  }
+  public Integer getPlayCount() {
     return playedBy.size();
   }
 
   public LocalDateTime getPublishedAt() {
     return album.getPublishedAt();
+  }
+
+  public int getPriorityInAlbum() {
+    return priorityInAlbum;
+  }
+  public void setPriorityInAlbum(int priorityInAlbum) {
+    this.priorityInAlbum = priorityInAlbum;
   }
 }

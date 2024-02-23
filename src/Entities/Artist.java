@@ -1,4 +1,5 @@
 package Entities;
+import java.util.ArrayList;
 import java.util.List;
 
 import Abstracts.DetailedUser;
@@ -11,6 +12,7 @@ public class Artist extends DetailedUser {
   public Artist(String fullname, String username, String password, String bio, String nickname) {
     super(fullname, username, password, bio);
     this.nickname = nickname;
+    this.allSongs = new ArrayList<>();
   }
 
   @Override
@@ -55,6 +57,11 @@ public class Artist extends DetailedUser {
       }
     }
     return mostPlayedSong;
+  }
+
+  @Override
+  public int getSongsCount() {
+    return this.allSongs.size();
   }
   
 }

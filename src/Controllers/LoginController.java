@@ -1,6 +1,5 @@
 package Controllers;
 import Abstracts.User;
-import Managers.UserManager;
 import Services.AuthService;
 import Services.InputReaderService;
 
@@ -13,7 +12,7 @@ public class LoginController {
       String username = InputReaderService.getString("Enter username: ", null);
       String password = InputReaderService.getString("Enter password: ", null);
       try {
-        User user = UserManager.validateCredentials(username, password);
+        User user = AuthService.validateCredentials(username, password);
         AuthService.login(user);
       } catch (Exception e) {
         System.out.println(e.getMessage());

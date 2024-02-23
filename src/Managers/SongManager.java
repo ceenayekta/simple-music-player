@@ -22,6 +22,10 @@ public class SongManager {
   }
 
   public static void removeSong(Song song) {
+    if (song.getAlbum() != null) {
+      song.getAlbum().removeSong(song);
+    }
+    song.getArtist().removeSong(song);
     songs.remove(song);
   }
 
@@ -41,9 +45,34 @@ public class SongManager {
     return song.orElse(null);
   }
 
-  public static List<Song> filterSongsByName(String query) {
-    List<Song> song = songs.stream().filter(s -> s.getName().toLowerCase().contains(query.toLowerCase())).toList();
+  public static List<Song> getActiveSongs() {
+    List<Song> filteredSongs = songs.stream().filter(s -> s.getAlbum() != null && s.getAlbum().isPublic() && s.getAlbum().isPublished() && !s.isBanned()).toList();
+    return filteredSongs;
+  }
+
+  public static List<Song> getActiveSongsOfArtist(int artistId) {
+    List<Song> filteredSongs = getActiveSongs().stream().filter(s -> s.getArtist().getId() == artistId).toList();
+    return filteredSongs;
+  }
+
+  public static List<Song> filterSongsByName(String query, boolean onlyActive) {
+    List<Song> songsToSearch = onlyActive ? getActiveSongs() : songs;
+    List<Song> song = songsToSearch.stream().filter(s -> s.getName().toLowerCase().contains(query.toLowerCase())).toList();
     return song;
+  }
+
+  public static List<Song> filterSongsByCategory(Category category, boolean onlyActive) {
+    List<Song> songsToSearch = onlyActive ? getActiveSongs() : songs;
+    List<Song> song = songsToSearch.stream().filter(s -> s.getCategory().equals(category)).toList();
+    return song;
+  }
+
+  public static List<Song> sortSongsByPlayCount(boolean onlyActive) {
+    List<Song> songsToSearch = onlyActive ? getActiveSongs() : songs;
+    List<Song> songs = songsToSearch.stream().sorted((u1, u2) -> {
+      return u1.getPlayCount().compareTo(u2.getPlayCount());
+    }).toList();
+    return songs;
   }
 
   public static void generateData() {

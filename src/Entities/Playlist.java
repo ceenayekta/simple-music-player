@@ -2,6 +2,7 @@ package Entities;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import Abstracts.CommonProperties;
 import Abstracts.User;
@@ -11,6 +12,7 @@ public class Playlist extends CommonProperties {
   private String description;
   private User owner;
   private boolean isPublic;
+  private boolean isBanned = false;
   private LocalDateTime publishedAt;
   private List<Song> songs;
 
@@ -61,6 +63,13 @@ public class Playlist extends CommonProperties {
     setPublic(true);
   }
 
+  public boolean isBanned() {
+    return isBanned;
+  }
+  public void setBanned(boolean isBanned) {
+    this.isBanned = isBanned;
+  }
+
   public LocalDateTime getPublishedAt() {
     return publishedAt;
   }
@@ -80,24 +89,38 @@ public class Playlist extends CommonProperties {
   public void setSongs(List<Song> songs) {
     this.songs = songs;
   }
+  public int getSongsCount() {
+    return songs.size();
+  }
   public void addSong(Song song) {
     this.songs.add(song);
   }
+  public void removeSong(Song song) {
+    this.songs.remove(song);
+  }
 
-  public float getTotalLength() {
+  public float getTotalDuration() {
     float total = 0;
     for (Song song : this.songs) {
-      total += song.getLength();
+      total += song.getDuration();
     }
     return total;
   }
 
-  public int getOverallPlayedCount() {
+  public Integer getOverallPlayedCount() {
     int count = 0;
     for (Song song : songs) {
       count += song.getPlayCount();
     }
     return count;
+  }
+
+  public void changeSongPriority(Song song, int priority) {
+    Optional<Song> samePrioritySong = song.getAlbum().getSongs().stream().filter(s -> s.getPriorityInAlbum() == priority).findFirst();
+    if (samePrioritySong.isPresent()) {
+      samePrioritySong.get().setPriorityInAlbum(song.getPriorityInAlbum());
+    }
+    song.setPriorityInAlbum(priority);
   }
   
 }

@@ -15,6 +15,7 @@ import Managers.PlaylistManager;
 import Managers.UserManager;
 
 public class OutputService {
+
   // --------------- prints ------------------
 
   public static void printTable(List<String> labels, List<List<Object>> data) {
@@ -26,11 +27,12 @@ public class OutputService {
       System.out.printf("%-15s", "---------------");
     }
     System.out.println();
-    for (List<Object> row : data) {
-        for (Object cell : row) {
-            System.out.printf("%-15s", cell);
-        }
-        System.out.println();
+    for (int i = 0; i < labels.size(); i++) {
+      List<Object> row = data.get(i);
+      for (Object cell : row) {
+          System.out.printf("%-15s", cell);
+      }
+      System.out.println();
     }
     if (data.size() == 0) {
       System.out.printf("%-" + labels.size()*15 + "s", "No Data to Show!");
@@ -41,27 +43,125 @@ public class OutputService {
     System.out.println();
   }
 
-  public static void printSongs(List<Song> songs) {
-    // List<String> labels = Arrays.asList("ID", "Fullname", "Birthday", "Username");
-    // List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(s.getId(), s.getName(), s.));
-    // printTable(labels, data);
+  public static void printSongs(List<Song> songs, boolean showIsBanned) {
+    List<String> labels = Arrays.asList("ID", "Name", "Duration", "Played Count", "Category", "Album", "Artist", "Published At");
+    List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(
+      s.getId(),
+      s.getName(),
+      s.getDuration(),
+      s.getPlayCount(),
+      s.getCategory(),
+      s.getAlbum() == null ? "(Single Track)" : s.getAlbum().getName(),
+      s.getArtist().getNickname(),
+      s.getPublishedAt() == null ? "(Not Published)" : CommonService.shortDateFormat(s.getPublishedAt()),
+      s.isBanned() ? "Yes" : "No"
+    ));
+    if (showIsBanned) labels.add("Is Banned");
+    printTable(labels, data);
   }
 
-  public static void printPlaylists(List<Playlist> songs) {
-    // List<String> labels = Arrays.asList("ID", "Fullname", "Birthday", "Username");
-    // List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(s.getId(), s.getName(), s.));
-    // printTable(labels, data);
+  public static void printPlaylists(List<Playlist> playlists, boolean showIsBanned) {
+    List<String> labels = Arrays.asList("ID", "Name", "Overall Played Count", "Songs", "Duration", "Creator", "Published At");
+    List<List<Object>> data = CommonService.map2D(playlists, (p) -> Arrays.asList(
+      p.getId(),
+      p.getName(),
+      p.getOverallPlayedCount(),
+      p.getSongsCount(),
+      p.getTotalDuration(),
+      p.getOwner() instanceof Artist ? ((Artist) p.getOwner()).getNickname() : p.getOwner().getFullname(),
+      p.getPublishedAt() == null ? "(Not Published)" : CommonService.shortDateFormat(p.getPublishedAt()),
+      p.isBanned() ? "Yes" : "No"
+    ));
+    if (showIsBanned) labels.add("Is Banned");
+    printTable(labels, data);
   }
 
-  public static void printUsers(List<User> songs) {
-    // List<String> labels = Arrays.asList("ID", "Fullname", "Birthday", "Username");
-    // List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(s.getId(), s.getName(), s.));
-    // printTable(labels, data);
+  public static void printUsers(List<User> users, boolean showIsBanned) {
+    List<String> labels = Arrays.asList("ID", "Username", "Fullname", "Role", "Joined At", "Is Banned");
+    List<List<Object>> data = CommonService.map2D(users, (u) -> Arrays.asList(
+      u.getId(),
+      u.getUsername(),
+      u.getFullname(),
+      u.getRole().toString(),
+      CommonService.shortDateFormat(u.getCreatedAt()),
+      u instanceof DetailedUser ? ((DetailedUser) u).isBanned() ? "Yes" : "No" : "No"
+    ));
+    if (showIsBanned) labels.add("Is Banned");
+    printTable(labels, data);
+  }
+
+  public static void printDetailedUsers(List<DetailedUser> detailedUser) {
+    List<String> labels = Arrays.asList("ID", "Nickname", "Playlists", "Songs", "Followers", "Following", "Joined At");
+    List<List<Object>> data = CommonService.map2D(detailedUser, (d) -> Arrays.asList(
+      d.getId(),
+      d instanceof Artist ? ((Artist) d).getNickname() : d.getFullname(),
+      d.getPlaylistsCount(),
+      d.getSongsCount(),
+      d.getFollowersCount(),
+      d.getFollowingsCount(),
+      CommonService.shortDateFormat(d.getCreatedAt())
+    ));
+    printTable(labels, data);
   }
 
   public static String printCategories() {
     CommonService.printOptions(Arrays.stream(Category.values()).map(c -> c.toString()).toList());
     return InputReaderService.getString("Give your song a category: ", CommonService.createArrayOf(Arrays.asList(Category.values()).size()));
+  }
+
+  // ---------------
+
+  public static void printDetails(List<String> titles, List<Object> values) {
+    System.out.printf("%-35s", "---------------------");
+    for (int i = 0; i < titles.size(); i++) {
+      System.out.printf("%-15s", titles.get(i));
+      System.out.printf("%-1s", "|");
+      System.out.printf("%-25s", values.get(i));
+      System.out.println();
+    }
+    System.out.printf("%-35s", "---------------------");
+  }
+
+  public static void printProfile(DetailedUser d) {
+    List<String> labels = Arrays.asList(d instanceof Artist ? "Nickname" : "Fullname", "Bio", "Playlists", "Songs", "Followers", "Following", "Joined At");
+    List<Object> values = Arrays.asList(
+      d instanceof Artist ? ((Artist)d).getNickname() : d.getFullname(),
+      d.getBio(),
+      d.getPlaylistsCount(),
+      d.getSongsCount(),
+      d.getFollowersCount(),
+      d.getFollowingsCount(),
+      CommonService.shortDateFormat(d.getCreatedAt())
+    );
+    printDetails(labels, values);
+  }
+
+  public static void printSong(Song s) {
+    List<String> labels = Arrays.asList("Name", "Duration", "Played Count", "Category", "Album", "Artist", "Published At");
+    List<Object> values = Arrays.asList(
+      s.getName(),
+      s.getDuration(),
+      s.getPlayCount(),
+      s.getCategory().toString(),
+      s.getAlbum() == null ? "(Single Track)" : s.getAlbum().getName(),
+      s.getArtist().getNickname(),
+      s.getPublishedAt() == null ? "(Not Published)" : CommonService.shortDateFormat(s.getPublishedAt())
+    );
+    printDetails(labels, values);
+  }
+
+  public static void printPlaylist(Playlist p) {
+    List<String> labels = Arrays.asList("ID", "Name", "Overall Played Count", "Songs", "Duration", "Creator", "Published At");
+    List<Object> values = Arrays.asList(
+      p.getId(),
+      p.getName(),
+      p.getOverallPlayedCount(),
+      p.getSongsCount(),
+      p.getTotalDuration(),
+      p.getOwner() instanceof Artist ? ((Artist) p.getOwner()).getNickname() : p.getOwner().getFullname(),
+      p.getPublishedAt() == null ? "(Not Published)" : CommonService.shortDateFormat(p.getPublishedAt())
+    );
+    printDetails(labels, values);
   }
 
   // --------------- wizards ----------------
@@ -95,7 +195,7 @@ public class OutputService {
       String choice = InputReaderService.getString("Would you like to add any of your single tracks to this playlist? (y/n) ", Arrays.asList("y", "n"));
       if (choice.equals("y")) {
         List<Song> singleTracks = ((Artist)owner).getSingleTrackSongs();
-        printSongs(singleTracks);
+        printSongs(singleTracks, true);
         String inputIds = InputReaderService.getString("Enter each ID of tracks would you want to add? (separated by comma ex. 1, 2, 3): ", null);
         List<String> ids = Arrays.stream(inputIds.split(",")).map(id -> id.trim()).toList();
         List<Song> filteredTracks = SongService.filterSongsByIds(singleTracks, ids);
@@ -103,6 +203,7 @@ public class OutputService {
       }
     }
     Playlist playlist = new Playlist(name, description, owner, songs);
+    System.out.println("Playlist created successfully! ID: " + playlist.getId());
     return playlist;
   }
   
@@ -120,6 +221,7 @@ public class OutputService {
         return null;
       }
       Song song = new Song(name, album, (Artist)artist, file, category);
+      System.out.println("Song created successfully! ID: " + song.getId());
       return song;
     } else {
       System.out.println("Only artists can create songs.");
@@ -133,8 +235,10 @@ public class OutputService {
   }
 
   public static Playlist getAlbum(List<Playlist> albums) {
-    printPlaylists(albums);
-    String id = InputReaderService.getString("Which album would you like to add this song to? (Enter ID): ", CommonService.getAllIdsOfEntity(albums));
-    return PlaylistManager.getPlaylistById(Integer.parseInt(id));
+    printPlaylists(albums, true);
+    List<Object> possibleOptions = CommonService.getAllIdsOfEntity(albums);
+    possibleOptions.add("s");
+    String id = InputReaderService.getString("Which album would you like to add this song to? (Enter ID, or 's' to skip): ", possibleOptions);
+    return id.equals("s") ? null : PlaylistManager.getPlaylistById(Integer.parseInt(id));
   }
 }

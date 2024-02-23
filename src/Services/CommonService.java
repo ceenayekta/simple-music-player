@@ -1,10 +1,12 @@
 package Services;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -45,6 +47,10 @@ public class CommonService {
   public static LocalTime formatTime(String date) {
     DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("HH:mm").parseStrict().toFormatter();
     return LocalTime.parse(date, formatter);
+  }
+
+  public static String shortDateFormat(LocalDateTime dateTime) {
+    return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(dateTime);
   }
 
   public static Boolean dateIsValid(String date) {
@@ -98,7 +104,7 @@ public class CommonService {
   }
 
   public static List<Object> getAllIdsOfEntity(List<? extends CommonProperties> list) {
-    List<Object> ids = list.stream().map((item) -> (Object)item.getId()).toList();
+    List<Object> ids = list.stream().map((item) -> (Object) Integer.valueOf(item.getId())).toList();
     return ids;
   }
 

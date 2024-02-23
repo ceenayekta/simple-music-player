@@ -5,7 +5,7 @@ public abstract class CommonProperties {
   private int id;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
-  private static int idCounter = 0;
+  private static int idCounter = 1;
 
   public CommonProperties() {
     super();

@@ -1,6 +1,8 @@
 package Services;
+import Abstracts.DetailedUser;
 import Abstracts.User;
 import Enums.UserRole;
+import Managers.UserManager;
 
 public class AuthService {
   private static User user;
@@ -43,5 +45,31 @@ public class AuthService {
     setLoggedIn(false);
     setRole(null);
     setUser(null);
+  }
+
+  public static User validateCredentials(String username, String password) throws Exception {
+    User user = UserManager.getUserByUsername(username);
+    if (user == null) throw new Exception("Username does not exist!");
+    else if (!user.getPassword().equals(password)) throw new Exception("Incorrect password!");
+    else if (user instanceof DetailedUser && ((DetailedUser)user).isBanned()) throw new Exception("Your account is banned! Please contact support@example.com");
+    return user;
+  }
+
+  public static void updatePassword(User user, String currentPassword, String newPassword) throws Exception {
+    if (validateCredentials(user.getUsername(), currentPassword) != null) {
+      user.setPassword(newPassword);
+    }
+  }
+
+  public static void updateUsername(User user, String newUsername) throws Exception {
+    try {
+      validateCredentials(newUsername, "");
+    } catch (Exception e) {
+      if (e.getMessage().equals("Username does not exist!")) {
+        user.setUsername(newUsername);
+      } else {
+        throw new Exception("Username is taken by another user!");
+      }
+    }
   }
 }
