@@ -12,6 +12,7 @@ import Abstracts.CommonProperties;
 import Enums.Category;
 
 public class Song extends CommonProperties {
+  private boolean isBanned = false;
   private String name;
   private Playlist album;
   private Artist artist;
@@ -39,6 +40,13 @@ public class Song extends CommonProperties {
     this.name = name;
   }
 
+  public boolean isBanned() {
+    return isBanned;
+  }
+  public void setBanned(boolean isBanned) {
+    this.isBanned = isBanned;
+  }
+
   public Playlist getAlbum() {
     return album;
   }
@@ -64,7 +72,8 @@ public class Song extends CommonProperties {
   public float getSize() {
     return this.file.length();
   }
-  public double getLength() {
+  
+  public double getDuration() {
     try {
       AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.file);
       AudioFormat format = audioInputStream.getFormat();

@@ -11,6 +11,7 @@ public class Playlist extends CommonProperties {
   private String description;
   private User owner;
   private boolean isPublic;
+  private boolean isBanned = false;
   private LocalDateTime publishedAt;
   private List<Song> songs;
 
@@ -61,6 +62,13 @@ public class Playlist extends CommonProperties {
     setPublic(true);
   }
 
+  public boolean isBanned() {
+    return isBanned;
+  }
+  public void setBanned(boolean isBanned) {
+    this.isBanned = isBanned;
+  }
+
   public LocalDateTime getPublishedAt() {
     return publishedAt;
   }
@@ -80,14 +88,17 @@ public class Playlist extends CommonProperties {
   public void setSongs(List<Song> songs) {
     this.songs = songs;
   }
+  public int setSongsCount() {
+    return songs.size();
+  }
   public void addSong(Song song) {
     this.songs.add(song);
   }
 
-  public float getTotalLength() {
+  public float getTotalDuration() {
     float total = 0;
     for (Song song : this.songs) {
-      total += song.getLength();
+      total += song.getDuration();
     }
     return total;
   }

@@ -50,8 +50,21 @@ public abstract class DetailedUser extends User {
   public void setPlaylists(List<Playlist> playlists) {
     this.playlists = playlists;
   }
+  public int getPlaylistsCount() {
+    return this.playlists.size();
+  }
+  public int getSongsCount() {
+    int count = 0;
+    for (Playlist playlist : playlists) {
+      count += playlist.setSongsCount();
+    }
+    return count;
+  }
   public void addPlaylist(Playlist newPlaylist) {
     this.playlists.add(newPlaylist);
+  }
+  public void removePlaylist(Playlist targetPlaylist) {
+    this.playlists.remove(targetPlaylist);
   }
   
   public List<DetailedUser> getFollowers() {
@@ -109,6 +122,8 @@ public abstract class DetailedUser extends User {
   public void unblock(DetailedUser targetUser) {
     this.blockedUsers.remove(targetUser);
   }
+  public boolean hasBlockedTheUser(int userId) {
+    return blockedUsers.stream().anyMatch(u -> u.getId() == userId);
+  }
 
-    
 }

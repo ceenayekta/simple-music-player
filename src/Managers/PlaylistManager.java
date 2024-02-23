@@ -7,6 +7,8 @@ import java.util.Optional;
 import Abstracts.DetailedUser;
 import Entities.Playlist;
 import Entities.Song;
+import Enums.Category;
+import Services.SongService;
 
 public class PlaylistManager {
   private static List<Playlist> playlists = new ArrayList<>();
@@ -37,6 +39,34 @@ public class PlaylistManager {
   public static Playlist getPlaylistById(int playlistId) {
     Optional<Playlist> playlist = playlists.stream().filter(p -> p.getId() == playlistId).findFirst();
     return playlist.orElse(null);
+  }
+
+  public static List<Playlist> getActivePlaylists() {
+    List<Playlist> filteredPlaylists = playlists.stream().filter(p -> p.isPublic() && p.isPublished() && !p.isBanned()).toList();
+    return filteredPlaylists;
+  }
+
+  public static List<Playlist> getActivePlaylistsOfUser(int userId) {
+    List<Playlist> filteredPlaylists = getActivePlaylists().stream().filter(p -> p.getOwner().getId() == userId).toList();
+    return filteredPlaylists;
+  }
+
+  public static void banPlaylist(int playlistId, boolean banned) {
+    Playlist playlist = getPlaylistById(playlistId);
+    playlist.setBanned(banned);
+    playlist.getSongs().forEach(s -> s.setBanned(banned));
+  }
+
+  public static List<Playlist> filterPlaylistsByName(String query, boolean onlyActive) {
+    List<Playlist> playlistsToSearch = onlyActive ? getActivePlaylists() : playlists;
+    List<Playlist> song = playlistsToSearch.stream().filter(p -> p.getName().toLowerCase().contains(query.toLowerCase())).toList();
+    return song;
+  }
+
+  public static List<Playlist> filterPlaylistsByCategory(Category category, boolean onlyActive) {
+    List<Playlist> playlistsToSearch = onlyActive ? getActivePlaylists() : playlists;
+    List<Playlist> filteredPlaylists = playlistsToSearch.stream().filter(p -> SongService.areHalfOfSongsSameCategory(p.getSongs(), category)).toList();
+    return filteredPlaylists;
   }
 
   public static void generateData() {

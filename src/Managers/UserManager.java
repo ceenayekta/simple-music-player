@@ -9,6 +9,7 @@ import Entities.Admin;
 import Entities.Artist;
 import Entities.Listener;
 import Enums.UserRole;
+import Services.AuthService;
 
 public class UserManager {
   private static List<User> users = new ArrayList<>();
@@ -52,18 +53,26 @@ public class UserManager {
     return sortedUsers;
   }
 
-  public static List<User> getUsersSortedByPlayTime(UserRole role) {
-    List<User> sortedUsers = getUserByRole(role).stream().sorted((u1, u2) -> {
-      if (u1 instanceof DetailedUser && u2 instanceof DetailedUser) {
-        return ((DetailedUser)u1).getPlayTimeInSeconds().compareTo(((DetailedUser)u2).getPlayTimeInSeconds());
+  public static List<DetailedUser> getDetailedUsers(List<User> users) {
+    List<DetailedUser> detailedUsers = new ArrayList<>();
+    for (User user : users) {
+      if (user instanceof DetailedUser) {
+        detailedUsers.add((DetailedUser)user);
       }
-      return -1;
+    }
+    return detailedUsers;
+  }
+
+  public static List<DetailedUser> getUsersSortedByPlayTime(UserRole role) {
+    List<DetailedUser> filteredDetailedUsers = getDetailedUsers(getUserByRole(role));
+    List<DetailedUser> sortedUsers = filteredDetailedUsers.stream().sorted((u1, u2) -> {
+      return u1.getPlayTimeInSeconds().compareTo(u2.getPlayTimeInSeconds());
     }).toList();
     return sortedUsers;
   }
 
   public static List<User> getUserByRole(UserRole role) {
-    List<User> filteredUsers = users.stream().filter(u -> u.getRole() == role).toList();
+    List<User> filteredUsers = getNotBlockedUsers().stream().filter(u -> u.getRole() == role).toList();
     return filteredUsers;
   }
 
@@ -77,40 +86,20 @@ public class UserManager {
     return filteredUsers;
   }
 
+  public static List<User> getNotBlockedUsers() {
+    Integer userId = AuthService.isLoggedIn() ? AuthService.getUser().getId() : null;
+    List<User> user = users.stream().filter(s -> s instanceof DetailedUser && !((DetailedUser)s).hasBlockedTheUser(userId)).toList();
+    return user;
+  }
+
   public static List<User> filterUsersByName(String query) {
-    List<User> user = users.stream().filter(s -> s.getFullname().toLowerCase().contains(query.toLowerCase())).toList();
+    List<User> user = getNotBlockedUsers().stream().filter(s -> s.getFullname().toLowerCase().contains(query.toLowerCase())).toList();
     return user;
   }
 
   public static User getUserByUsername(String username) {
     Optional<User> user = users.stream().filter(u -> u.getUsername().equals(username)).findFirst();
     return user.orElse(null);
-  }
-
-  public static User validateCredentials(String username, String password) throws Exception {
-    User user = getUserByUsername(username);
-    if (user == null) throw new Exception("Username does not exist!");
-    else if (!user.getPassword().equals(password)) throw new Exception("Incorrect password!");
-    else if (user instanceof DetailedUser && ((DetailedUser)user).isBanned()) throw new Exception("Your account is banned! Please contact support@example.com");
-    return user;
-  }
-
-  public static void updatePassword(User user, String currentPassword, String newPassword) throws Exception {
-    if (validateCredentials(user.getUsername(), currentPassword) != null) {
-      user.setPassword(newPassword);
-    }
-  }
-
-  public static void updateUsername(User user, String newUsername) throws Exception {
-    try {
-      validateCredentials(newUsername, "");
-    } catch (Exception e) {
-      if (e.getMessage().equals("Username does not exist!")) {
-        user.setUsername(newUsername);
-      } else {
-        throw new Exception("Username is taken by another user!");
-      }
-    }
   }
 
   public static void generateData() {

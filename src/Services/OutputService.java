@@ -42,21 +42,58 @@ public class OutputService {
   }
 
   public static void printSongs(List<Song> songs) {
-    // List<String> labels = Arrays.asList("ID", "Fullname", "Birthday", "Username");
-    // List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(s.getId(), s.getName(), s.));
-    // printTable(labels, data);
+    List<String> labels = Arrays.asList("ID", "Name", "Duration", "Played Count", "Category", "Album", "Artist", "Published At");
+    List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(
+      s.getId(),
+      s.getName(),
+      s.getDuration(),
+      s.getPlayCount(),
+      s.getCategory(),
+      s.getAlbum() == null ? "(Single Track)" : s.getAlbum().getName(),
+      s.getArtist().getNickname(),
+      CommonService.shortDateFormat(s.getPublishedAt())
+    ));
+    printTable(labels, data);
   }
 
-  public static void printPlaylists(List<Playlist> songs) {
-    // List<String> labels = Arrays.asList("ID", "Fullname", "Birthday", "Username");
-    // List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(s.getId(), s.getName(), s.));
-    // printTable(labels, data);
+  public static void printPlaylists(List<Playlist> playlists) {
+    List<String> labels = Arrays.asList("ID", "Name", "Overall Played Count", "Songs", "Duration", "Creator", "Published At");
+    List<List<Object>> data = CommonService.map2D(playlists, (p) -> Arrays.asList(
+      p.getId(),
+      p.getName(),
+      p.getOverallPlayedCount(),
+      p.setSongsCount(),
+      p.getTotalDuration(),
+      p.getOwner() instanceof Artist ? ((Artist) p.getOwner()).getNickname() : p.getOwner().getFullname(),
+      CommonService.shortDateFormat(p.getPublishedAt()))
+    );
+    printTable(labels, data);
   }
 
-  public static void printUsers(List<User> songs) {
-    // List<String> labels = Arrays.asList("ID", "Fullname", "Birthday", "Username");
-    // List<List<Object>> data = CommonService.map2D(songs, (s) -> Arrays.asList(s.getId(), s.getName(), s.));
-    // printTable(labels, data);
+  public static void printUsers(List<User> users) {
+    List<String> labels = Arrays.asList("ID", "Username", "Fullname", "Role", "Joined At");
+    List<List<Object>> data = CommonService.map2D(users, (u) -> Arrays.asList(
+      u.getId(),
+      u.getUsername(),
+      u.getFullname(),
+      u.getRole().toString(),
+      CommonService.shortDateFormat(u.getCreatedAt())
+    ));
+    printTable(labels, data);
+  }
+
+  public static void printDetailedUsers(List<DetailedUser> detailedUser) {
+    List<String> labels = Arrays.asList("ID", "Nickname", "Playlists", "Songs", "Followers", "Following", "Joined At");
+    List<List<Object>> data = CommonService.map2D(detailedUser, (d) -> Arrays.asList(
+      d.getId(),
+      d instanceof Artist ? ((Artist) d).getNickname() : d.getFullname(),
+      d.getPlaylistsCount(),
+      d.getSongsCount(),
+      d.getFollowersCount(),
+      d.getFollowingsCount(),
+      CommonService.shortDateFormat(d.getCreatedAt())
+    ));
+    printTable(labels, data);
   }
 
   public static String printCategories() {

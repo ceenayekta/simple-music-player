@@ -75,8 +75,8 @@ public class AdminUI {
       () -> OutputService.printUsers(Arrays.asList(UserManager.getUserById(getUserId("Enter user ID to print: ")))),
       () -> OutputService.printUsers(UserManager.filterUsersByName((InputReaderService.getString("Enter user name to search: ", null)))),
       () -> sortUsersByRole(),
-      () -> OutputService.printUsers(UserManager.getUsersSortedByPlayTime(UserRole.Listener)),
-      () -> OutputService.printUsers(UserManager.getUsersSortedByPlayTime(UserRole.Artist)),
+      () -> OutputService.printDetailedUsers(UserManager.getUsersSortedByPlayTime(UserRole.Listener)),
+      () -> OutputService.printDetailedUsers(UserManager.getUsersSortedByPlayTime(UserRole.Artist)),
       () -> OutputService.printUsers(UserManager.getBannedUsers()),
       () -> { stopInnerMenu = true; }
     );
