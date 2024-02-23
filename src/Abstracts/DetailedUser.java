@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Entities.Playlist;
+import Entities.Song;
 
 public abstract class DetailedUser extends User {
   private String bio;
@@ -117,6 +118,10 @@ public abstract class DetailedUser extends User {
     this.removeFollowing(targetUser);
     targetUser.removeFollower(this);
   }
+  public boolean hasFollowedTheUser(int userId) {
+    return followings.stream().anyMatch(u -> u.getId() == userId);
+  }
+  
   public void block(DetailedUser targetUser) {
     this.unfollow(targetUser);
     targetUser.unfollow(this);
@@ -127,6 +132,10 @@ public abstract class DetailedUser extends User {
   }
   public boolean hasBlockedTheUser(int userId) {
     return blockedUsers.stream().anyMatch(u -> u.getId() == userId);
+  }
+
+  public Song getMostPlayedSong() {
+    return null;
   }
 
 }

@@ -54,6 +54,7 @@ public class Listener extends DetailedUser {
     this.playedSongs.add(song);
   }
 
+  @Override
   public Song getMostPlayedSong() {
     Map<Song, Integer> songCountMap = new HashMap<>();
     Song mostPlayedSong = null;

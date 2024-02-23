@@ -83,6 +83,8 @@ public class Song extends CommonProperties {
   
   public int getDuration() {
     try {
+      
+      
       AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.file);
       AudioFormat format = audioInputStream.getFormat();
       long frames = audioInputStream.getFrameLength();
@@ -117,7 +119,7 @@ public class Song extends CommonProperties {
   }
 
   public LocalDateTime getPublishedAt() {
-    return album.getPublishedAt();
+    return album == null ? null : album.getPublishedAt();
   }
 
   public int getPriorityInAlbum() {

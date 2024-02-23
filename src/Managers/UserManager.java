@@ -8,6 +8,7 @@ import Abstracts.User;
 import Entities.Admin;
 import Entities.Artist;
 import Entities.Listener;
+import Entities.Playlist;
 import Enums.UserRole;
 import Services.AuthService;
 
@@ -23,6 +24,11 @@ public class UserManager {
   }
 
   public static void removeUser(User user) {
+    if (user instanceof DetailedUser) {
+      for (Playlist playlist : ((DetailedUser)user).getPlaylists()) {
+        PlaylistManager.removePlaylist(playlist, true);
+      }
+    }
     users.remove(user);
   }
 
@@ -93,7 +99,9 @@ public class UserManager {
   }
 
   public static List<User> filterUsersByName(String query) {
-    List<User> user = getNotBlockedUsers().stream().filter(s -> s.getFullname().toLowerCase().contains(query.toLowerCase())).toList();
+    List<User> user = getNotBlockedUsers().stream().filter(s -> {
+      return s.getFullname().toLowerCase().contains(query.toLowerCase()) || (s instanceof Artist ? ((Artist)s).getNickname().toLowerCase().contains(query.toLowerCase()) : true);
+    }).toList();
     return user;
   }
 

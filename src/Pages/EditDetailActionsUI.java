@@ -7,7 +7,7 @@ import Abstracts.DetailedUser;
 import Services.AuthService;
 import Services.InputReaderService;
 
-public class EditDetailedUserUI {
+public class EditDetailActionsUI {
   private static DetailedUser detailedUser = (DetailedUser) AuthService.getUser();
 
   public static List<String> getOptions() {
@@ -30,7 +30,7 @@ public class EditDetailedUserUI {
 
   public static void updateUsername() {
     try {
-      String newUserName = InputReaderService.getString("Enter your new nickname: ", null);
+      String newUserName = InputReaderService.getString("Enter your new username: ", null);
       AuthService.updateUsername(detailedUser, newUserName);
       System.out.println("Username has been updated");
     } catch (Exception e) {

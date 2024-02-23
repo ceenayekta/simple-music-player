@@ -21,8 +21,9 @@ public class InputReaderService {
     }
     String input = inputReader.nextLine();
     if (options != null) {
-      while (!options.contains(input)) {
-        System.out.println("Invalid option. Possible options: " + String.join(", ", options.stream().map(o -> o.toString()).toList()));
+      List<String> stringOptions = options.stream().map(o -> o.toString()).toList();
+      while (!stringOptions.contains(input)) {
+        System.out.println("Invalid option. Possible options: " + String.join(", ", stringOptions));
         input = inputReader.nextLine();
       }
     }

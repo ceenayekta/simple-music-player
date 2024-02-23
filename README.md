@@ -1,18 +1,29 @@
-## Getting Started
+# Simple Music Player
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Description
+
+A simple console-app music player with 3 different role users: `Admin`, `Artist`, `Listener`.
+Feel free to fork, clone and have fun!
 
 ## Folder Structure
 
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
+The workspace contains following two folders by default, Meanwhile, the compiled output files will be generated in the `bin` folder by default.
 - `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+- `src`: the folder to maintain sources
+  - `Abstracts`: contains abstract classes commonly used in project
+  - `Controllers`: contains middleware and controllers (ex. `LoginController.java`)
+  - `Entities`: contains all entities application needs
+  - `Enums`: contains enums
+  - `Managers`: contains managers to handle collection apis
+  - `Pages`: contains UI classes to give options to user
+  - `Services`: contains utils and methods commonly used in Pages and others
+  - `Songs`: used for storing imported songs to app (ignored by git)
 
 > If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
 
-## Dependency Management
+## Sources Used
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Mostly viewed following sources for any methods, castings, implementations and extensions, 
+
+- [Oracle Java Docs](https://docs.oracle.com/javase/8/docs/)
+- [Geeks For Geeks](https://www.geeksforgeeks.org/java/)

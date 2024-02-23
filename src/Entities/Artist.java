@@ -44,8 +44,8 @@ public class Artist extends DetailedUser {
     return this.allSongs.stream().filter(s -> s.getAlbum() == null).toList();
   }
 
+  @Override
   public Song getMostPlayedSong() {
-    // Assuming that Song class has a method to get the play count
     Song mostPlayedSong = null;
     int maxPlayCount = 0;
     for (Playlist playlist : this.getPlaylists()) {
