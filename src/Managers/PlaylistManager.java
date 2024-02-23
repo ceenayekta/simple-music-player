@@ -69,6 +69,14 @@ public class PlaylistManager {
     return filteredPlaylists;
   }
 
+  public static List<Playlist> sortPlayListsByPlayCount(boolean onlyActive) {
+    List<Playlist> playlistsToSearch = onlyActive ? getActivePlaylists() : playlists;
+    List<Playlist> playlists = playlistsToSearch.stream().sorted((u1, u2) -> {
+      return u1.getOverallPlayedCount().compareTo(u2.getOverallPlayedCount());
+    }).toList();
+    return playlists;
+  }
+
   public static void generateData() {
     // addUser(new Admin("Ceena Yekta", "ceen", "ceen123"));
     // addUser(new Artist("Sebastian Bach", "Bach.S", "bach#1", "bach", "The Great Bach"));

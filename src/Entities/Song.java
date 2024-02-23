@@ -101,7 +101,7 @@ public class Song extends CommonProperties {
   public void setPlayedBy(List<Listener> playedBy) {
     this.playedBy = playedBy;
   }
-  public int getPlayCount() {
+  public Integer getPlayCount() {
     return playedBy.size();
   }
 

@@ -103,7 +103,7 @@ public class Playlist extends CommonProperties {
     return total;
   }
 
-  public int getOverallPlayedCount() {
+  public Integer getOverallPlayedCount() {
     int count = 0;
     for (Song song : songs) {
       count += song.getPlayCount();
